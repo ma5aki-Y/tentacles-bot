@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
 
+import os
+
 from modules.stage import StageInfo
 
 TOKEN = os.environ['BOT_TOKEN']
