@@ -52,13 +52,14 @@ class StageInfo:
         res = self.http_get(self.base_url + 'coop/schedule')
 
         start = dt.strptime(res['result'][0]['start'], '%Y-%m-%dT%H:%M:%S')
+        start_t = res['result'][0]['start_t']
         end = dt.strptime(res['result'][0]['end'], '%Y-%m-%dT%H:%M:%S')
         weapons = res['result'][0]['weapons']
 
         embed = discord.Embed(title="サーモンラン",color=0xecf150)
         embed.set_thumbnail(url=res['result'][0]['stage']['image'])
 
-        if now.timestamp() >= start.timestamp():
+        if now.timestamp() >= start_t:
             embed.add_field(name="バイト募集中！", value="__{0}__ まで".format(end.strftime('%m/%d %H:%M'), inline=True))
         else:
             embed.add_field(name="現在バイトは募集しておりません。", value="次のバイトは__{0}__ から".format(start.strftime('%m/%d %H:%M')), inline=True)
