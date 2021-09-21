@@ -130,7 +130,6 @@ async def on_message(message: discord.Message):
     if message.author.bot:
         return
     if message.content.startswith("/team"):
-        print(message.author.voice.channel.category)
         if message.author.voice is None:
             await message.channel.send("ボイスチャンネルに入ってね!")
             return
