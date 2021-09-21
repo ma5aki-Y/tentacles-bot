@@ -77,7 +77,7 @@ class RetryButton(discord.ui.Button):
             return
 
         name = list(split_list([member.name for member in interaction.user.voice.channel.members]))
-        await interaction.message.channel.send(":a: " + str(*name[0]) + "\n" + ":b: " + str(*name[1]), view=ShuffleButtonView())
+        await interaction.message.channel.send(gen_team_split_message(name), view=ShuffleButtonView())
 
 
 class ComeBuckButtonView(discord.ui.View):
@@ -112,13 +112,17 @@ class ReShuffleButton(discord.ui.Button):
             return
 
         name = list(split_list([member.name for member in interaction.user.voice.channel.members]))
-        await interaction.message.channel.send(":a: " + str(*name[0]) + "\n" + ":b: " + str(*name[1]), view=ShuffleButtonView())
+        await interaction.message.channel.send(gen_team_split_message(name), view=ShuffleButtonView())
 
 
 def split_list(members):
     random.shuffle(members)
-    yield members[0:len(members)//2]
-    yield members[len(members)//2:]
+    yield members[0:len(members) // 2]
+    yield members[len(members) // 2:]
+
+
+def gen_team_split_message(members):
+    return ":a: " + str(*members[0]) + "\n" + ":regional_indicator_b: " + str(*members[1])
 
 
 @bot.event
@@ -126,11 +130,14 @@ async def on_message(message: discord.Message):
     if message.author.bot:
         return
     if message.content.startswith("/team"):
+        print(message.author.voice.channel.category)
         if message.author.voice is None:
             await message.channel.send("ボイスチャンネルに入ってね!")
             return
+        await message.author.voice.channel.category.create_voice_channel("alpha")
+        await message.author.voice.channel.category.create_voice_channel("bravo")
         name = list(split_list([member.name for member in message.author.voice.channel.members]))
-        await message.channel.send(":a: " + str(*name[0]) + "\n" + ":b: " + str(*name[1]), view=ShuffleButtonView())
+        await message.channel.send(gen_team_split_message(name), view=ShuffleButtonView())
 
 
 bot.run(TOKEN)
